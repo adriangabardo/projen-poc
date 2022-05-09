@@ -12,7 +12,7 @@ jobs:
     outputs:
       self_mutation_happened: ${{ steps.self_mutation.outputs.self_mutation_happened }}
     env:
-      CI: "true"
+      CI: 'true'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -34,12 +34,14 @@ jobs:
         with:
           name: .repo.patch
           path: .repo.patch
-      - name: Fail build on mutation
+      - name: Add mutated files
         if: steps.self_mutation.outputs.self_mutation_happened
         run: |-
-          echo "::error::Files were changed during build (see build log). If this was triggered from a fork, you will need to update your branch."
-          cat .repo.patch
-          exit 1
+          git config user.email "adriangabardo@gmail.com"
+          git config user.name "Adrian Gabardo"
+          git add .
+          git commit -m "[skip ci] mutated files"
+          git push
       - name: Upload artifact
         uses: actions/upload-artifact@v2.1.1
         with:
@@ -80,7 +82,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     permissions: {}
-    if: "! needs.build.outputs.self_mutation_happened"
+    if: '! needs.build.outputs.self_mutation_happened'
     steps:
       - uses: actions/setup-node@v2
         with:
@@ -98,18 +100,19 @@ jobs:
         run: cd .repo && npx projen package:js
       - name: Collect js Artifact
         run: mv .repo/dist dist
-  package-dotnet:
+  package-java:
     needs: build
     runs-on: ubuntu-latest
     permissions: {}
-    if: "! needs.build.outputs.self_mutation_happened"
+    if: '! needs.build.outputs.self_mutation_happened'
     steps:
+      - uses: actions/setup-java@v2
+        with:
+          distribution: temurin
+          java-version: 11.x
       - uses: actions/setup-node@v2
         with:
           node-version: 14.x
-      - uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 3.x
       - name: Download build artifacts
         uses: actions/download-artifact@v2
         with:
@@ -119,7 +122,7 @@ jobs:
         run: mv dist .repo
       - name: Install Dependencies
         run: cd .repo && yarn install --check-files --frozen-lockfile
-      - name: Create dotnet artifact
-        run: cd .repo && npx projen package:dotnet
-      - name: Collect dotnet Artifact
+      - name: Create java artifact
+        run: cd .repo && npx projen package:java
+      - name: Collect java Artifact
         run: mv .repo/dist dist
