@@ -11,9 +11,10 @@ const project = new awscdk.AwsCdkConstructLibrary({
   npmDistTag: 'latest',
   npmRegistryUrl: 'https://npm.pkg.github.com',
   npmAccess: NpmAccess.RESTRICTED,
-  publishToNuget: {
-    dotNetNamespace: 'adriangabardo.projen.poc',
-    packageId: 'projen.poc',
+  publishToMaven: {
+    javaPackage: 'com.adriangabardo.projen',
+    mavenArtifactId: 'com.adriangabardo.projen',
+    mavenGroupId: 'adriangabardo',
   },
 
   // deps: [],                /* Runtime dependencies of this module. */
@@ -22,8 +23,12 @@ const project = new awscdk.AwsCdkConstructLibrary({
   // packageName: undefined,  /* The "name" in package.json. */
 });
 
-project.release.publisher.publishToNuget({
-  nugetApiKeySecret: 'NPM_TOKEN',
+project.release.publisher.publishToMaven({
+  mavenEndpoint: 'https://maven.pkg.github.com/adriangabardo/projen-poc',
+  mavenPassword: 'NPM_TOKEN',
+  mavenRepositoryUrl: 'git@github.com:adriangabardo/projen-poc.git',
+  mavenUsername: 'adriangabardo',
+  mavenServerId: 'github',
 });
 
 project.synth();

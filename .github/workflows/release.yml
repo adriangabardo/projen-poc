@@ -96,26 +96,34 @@ jobs:
           NPM_DIST_TAG: latest
           NPM_REGISTRY: npm.pkg.github.com
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  release_nuget:
-    name: Publish to NuGet Gallery
+  release_maven:
+    name: Publish to Maven Central
     needs: release
     runs-on: ubuntu-latest
     permissions:
       contents: read
     if: needs.release.outputs.latest_commit == github.sha
     steps:
+      - uses: actions/setup-java@v2
+        with:
+          distribution: temurin
+          java-version: 11.x
       - uses: actions/setup-node@v2
         with:
           node-version: 14.x
-      - uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 3.x
       - name: Download build artifacts
         uses: actions/download-artifact@v2
         with:
           name: build-artifact
           path: dist
       - name: Release
-        run: npx -p publib@latest publib-nuget
+        run: npx -p publib@latest publib-maven
         env:
-          NUGET_API_KEY: ${{ secrets.NPM_TOKEN }}
+          MAVEN_ENDPOINT: https://maven.pkg.github.com/adriangabardo/projen-poc
+          MAVEN_SERVER_ID: github
+          MAVEN_REPOSITORY_URL: git@github.com:adriangabardo/projen-poc.git
+          MAVEN_GPG_PRIVATE_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          MAVEN_GPG_PRIVATE_KEY_PASSPHRASE: ${{ secrets.MAVEN_GPG_PRIVATE_KEY_PASSPHRASE }}
+          MAVEN_PASSWORD: ${{ secrets.NPM_TOKEN }}
+          MAVEN_USERNAME: ${{ secrets.adriangabardo }}
+          MAVEN_STAGING_PROFILE_ID: ${{ secrets.MAVEN_STAGING_PROFILE_ID }}
