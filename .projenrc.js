@@ -4,7 +4,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   authorAddress: 'adrian.gabardo@argenti.com.au',
   cdkVersion: '2.1.0',
   defaultReleaseBranch: 'main',
-  name: 'projen-poc',
+  name: '@adriangabardo/projen-poc',
   repositoryUrl: 'git@github.com:adriangabardo/projen-poc.git',
   mutableBuild: true,
   npmDistTag: 'latest',
@@ -15,4 +15,5 @@ const project = new awscdk.AwsCdkConstructLibrary({
   // devDeps: [],             /* Build dependencies for this module. */
   // packageName: undefined,  /* The "name" in package.json. */
 });
+
 project.synth();

@@ -1,5 +1,5 @@
 {
-  "name": "projen-poc",
+  "name": "@adriangabardo/projen-poc",
   "repository": {
     "type": "git",
     "url": "git@github.com:adriangabardo/projen-poc.git"
