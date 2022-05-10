@@ -116,14 +116,19 @@ jobs:
         with:
           name: build-artifact
           path: dist
+      - name: Prepare Repository
+        run: mv dist .repo
+      - name: Install Dependencies
+        run: cd .repo && yarn install --check-files --frozen-lockfile
+      - name: Create java artifact
+        run: cd .repo && npx projen package:java
+      - name: Collect java Artifact
+        run: mv .repo/dist dist
       - name: Release
         run: npx -p publib@latest publib-maven
         env:
-          MAVEN_ENDPOINT: https://maven.pkg.github.com/adriangabardo/projen-poc
-          MAVEN_SERVER_ID: github
-          MAVEN_REPOSITORY_URL: git@github.com:adriangabardo/projen-poc.git
           MAVEN_GPG_PRIVATE_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           MAVEN_GPG_PRIVATE_KEY_PASSPHRASE: ${{ secrets.MAVEN_GPG_PRIVATE_KEY_PASSPHRASE }}
-          MAVEN_PASSWORD: ${{ secrets.NPM_TOKEN }}
-          MAVEN_USERNAME: ${{ secrets.adriangabardo }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_STAGING_PROFILE_ID: ${{ secrets.MAVEN_STAGING_PROFILE_ID }}

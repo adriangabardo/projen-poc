@@ -1,5 +1,6 @@
 const { awscdk } = require('projen');
 const { NpmAccess } = require('projen/lib/javascript');
+const { Publisher } = require('projen/lib/release');
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'Adrian Gabardo',
   authorAddress: 'adrian.gabardo@argenti.com.au',
@@ -23,10 +24,15 @@ const project = new awscdk.AwsCdkConstructLibrary({
   // packageName: undefined,  /* The "name" in package.json. */
 });
 
-project.release.publisher.publishToMaven({
+const publisher = new Publisher(project, {
+  artifactName: 'dist',
+  buildJobId: 'build',
+});
+
+publisher.publishToMaven({
   mavenEndpoint: 'https://maven.pkg.github.com/adriangabardo/projen-poc',
   mavenPassword: 'NPM_TOKEN',
-  mavenRepositoryUrl: 'git@github.com:adriangabardo/projen-poc.git',
+  mavenRepositoryUrl: 'https://maven.pkg.github.com/adriangabardo/projen-poc',
   mavenUsername: 'adriangabardo',
   mavenServerId: 'github',
 });
