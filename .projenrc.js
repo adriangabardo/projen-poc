@@ -30,11 +30,7 @@ const publisher = new Publisher(project, {
 });
 
 publisher.publishToMaven({
-  mavenEndpoint: 'https://maven.pkg.github.com/adriangabardo/projen-poc',
-  mavenPassword: 'NPM_TOKEN',
   mavenRepositoryUrl: 'https://maven.pkg.github.com/adriangabardo/projen-poc',
-  mavenUsername: 'adriangabardo',
-  mavenServerId: 'github',
 });
 
 project.synth();
