@@ -16,6 +16,8 @@ const project = new awscdk.AwsCdkConstructLibrary({
     javaPackage: 'com.adriangabardo.projen',
     mavenArtifactId: 'com.adriangabardo.projen',
     mavenGroupId: 'adriangabardo',
+    serverId: 'github',
+    mavenRepositoryUrl: 'https://maven.pkg.github.com/adriangabardo/projen-poc',
   },
 
   // deps: [],                /* Runtime dependencies of this module. */
